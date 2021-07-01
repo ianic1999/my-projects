@@ -1,0 +1,735 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-lesson1.yaml
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: full_name
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: INT
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: testimonial
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: job_title
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image
+                  type: varchar(512)
+              - column:
+                  name: message
+                  type: varchar(10000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_testimonial_user
+                    references: users(id)
+
+        - createTable:
+            tableName: space
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: area
+                  type: double
+              - column:
+                  name: price
+                  type: double
+              - column:
+                  name: description
+                  type: varchar(10000)
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_testimonial_user
+                    references: users(id)
+
+        - createTable:
+            tableName: space_image
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: filename
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: path
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: space_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_spaceimage_space
+                    references: space(id)
+
+        - createTable:
+            tableName: setting
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: key
+                  type: varchar(256)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: is_public
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: setting_value
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ro
+                  type: varchar(1000000)
+              - column:
+                  name: en
+                  type: varchar(1000000)
+              - column:
+                  name: ru
+                  type: varchar(1000000)
+              - column:
+                  name: setting_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_settingvalue_setting
+                    references: setting(id)
+
+        - createTable:
+            tableName: service
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: varchar(1024)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_service_user
+                    references: users(id)
+
+        - createTable:
+            tableName: partner
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: link
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_partner_user
+                    references: users(id)
+
+        - createTable:
+            tableName: album
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(10000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cover_image
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_public
+                  type: boolean
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_album_user
+                    references: users(id)
+
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: article
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: body
+                  type: varchar(20000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image
+                  type: varchar(512)
+              - column:
+                  name: message
+                  type: varchar(10000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_article_user
+                    references: users(id)
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_article_category
+                    references: category(id)
+
+        - createTable:
+            tableName: event
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: body
+                  type: varchar(1000000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: location
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: due_date_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: link
+                  type: varchar(256)
+              - column:
+                  name: image
+                  type: varchar(512)
+              - column:
+                  name: created_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_event_user
+                    references: users(id)
+
+  - changeSet:
+      id: 2
+      author: admin
+      changes:
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: filename
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: key
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: path
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: album_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_image_album
+                    references: album(id)
+        - modifyDataType:
+            tableName: event
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: event
+            columnName: updated_at
+            newDataType: timestamp
+
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - modifyDataType:
+            tableName: category
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: category
+            columnName: updated_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: partner
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: partner
+            columnName: updated_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: service
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: service
+            columnName: updated_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: setting
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: setting
+            columnName: updated_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: space
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: space
+            columnName: updated_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: testimonial
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: testimonial
+            columnName: updated_at
+            newDataType: timestamp
+
+        - dropColumn:
+            tableName: album
+            columnName: description
+
+  - changeSet:
+      id: 4
+      author: admin
+      changes:
+        - dropColumn:
+            tableName: service
+            columnName: title
+
+        - dropColumn:
+            tableName: service
+            columnName: summary
+
+        - dropColumn:
+            tableName: space
+            columnName: title
+
+        - dropColumn:
+            tableName: space
+            columnName: description
+
+        - createTable:
+            tableName: space_title
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ro
+                  type: varchar(256)
+              - column:
+                  name: ru
+                  type: varchar(256)
+              - column:
+                  name: en
+                  type: varchar(256)
+              - column:
+                  name: space_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_spacetitle_space
+                    references: space(id)
+
+        - createTable:
+            tableName: space_description
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ro
+                  type: varchar(10000)
+              - column:
+                  name: ru
+                  type: varchar(10000)
+              - column:
+                  name: en
+                  type: varchar(10000)
+              - column:
+                  name: space_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_spacedescription_space
+                    references: space(id)
+
+        - createTable:
+            tableName: service_title
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ro
+                  type: varchar(256)
+              - column:
+                  name: ru
+                  type: varchar(256)
+              - column:
+                  name: en
+                  type: varchar(256)
+              - column:
+                  name: service_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_servicetitle_service
+                    references: service(id)
+
+        - createTable:
+            tableName: service_summary
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ro
+                  type: varchar(1024)
+              - column:
+                  name: ru
+                  type: varchar(1024)
+              - column:
+                  name: en
+                  type: varchar(1024)
+              - column:
+                  name: service_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_servicesummary_service
+                    references: service(id)
+
+  - changeSet:
+      id: 5
+      author: admin
+      changes:
+        - modifyDataType:
+            tableName: article
+            columnName: created_at
+            newDataType: timestamp
+
+        - modifyDataType:
+            tableName: article
+            columnName: updated_at
+            newDataType: timestamp
+
+  - changeSet:
+      id: 6
+      author: admin
+      changes:
+        - dropColumn:
+            tableName: article
+            columnName: message
+
+
+
+

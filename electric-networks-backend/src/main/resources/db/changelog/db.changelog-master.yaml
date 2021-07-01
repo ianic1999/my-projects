@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+              - column:
+                  name: email
+                  type: varchar(256)
+              - column:
+                  name: password
+                  type: varchar(1024)
+              - column:
+                  name: role
+                  type: INT
+        - createTable:
+            tableName: station
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+        - createTable:
+            tableName: customer
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: contract_number
+                  type: varchar(512)
+              - column:
+                  name: full_name
+                  type: varchar(256)
+              - column:
+                  name: address
+                  type: varchar(512)
+              - column:
+                  name: meter
+                  type: varchar(256)
+              - column:
+                  name: phone
+                  type: varchar(256)
+              - column:
+                  name: station_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_customer_station
+                    references: station(id)
+        - createTable:
+            tableName: indication
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: date
+              - column:
+                  name: selected_at
+                  type: date
+              - column:
+                  name: amount
+                  type: double
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_indication_customer
+                    refeernces: customer(id)
+  - changeSet:
+      id: 2
+      author: admin
+      changes:
+        - addColumn:
+            tableName: station
+            columns:
+              name: order
+              type: INT
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - renameColumn:
+            tableName: station
+            columnDataType: INT
+            newColumnName: nr_of_order
+            oldColumnName: order
+

@@ -1,0 +1,295 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-lesson1.yaml
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(256)
+              - column:
+                  name: full_name
+                  type: varchar(256)
+              - column:
+                  name: password
+                  type: varchar(2048)
+              - column:
+                  name: role
+                  type: INT
+        - createTable:
+            tableName: agent
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(512)
+              - column:
+                  name: last_name
+                  type: varchar(512)
+              - column:
+                  name: phone
+                  type: varchar(512)
+              - column:
+                  name: email
+                  type: varchar(512)
+              - column:
+                  name: image
+                  type: varchar(2048)
+        - createTable:
+            tableName: location_title
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ro
+                  type: varchar(512)
+              - column:
+                  name: ru
+                  type: varchar(512)
+              - column:
+                  name: en
+                  type: varchar(512)
+        - createTable:
+            tableName: location
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_location_title
+                    references: location_title(id)
+        - createTable:
+            tableName: estate
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: INT
+              - column:
+                  name: service
+                  type: INT
+              - column:
+                  name: price
+                  type: double
+              - column:
+                  name: sector_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_estate_location
+                    references: location(id)
+              - column:
+                  name: construction_type
+                  type: INT
+              - column:
+                  name: agent_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_estate_agent
+                    reference: agent(id)
+              - column:
+                  name: square_meters
+                  type: double
+              - column:
+                  name: ares
+                  type: double
+              - column:
+                  name: land_destination
+                  type: INT
+              - column:
+                  name: reparation_type
+                  type: INT
+              - column:
+                  name: house_type
+                  type: INT
+              - column:
+                  name: floor
+                  type: varchar(512)
+              - column:
+                  name: heating
+                  type: INT
+              - column:
+                  name: construction_company
+                  type: varchar(512)
+              - column:
+                  name: rooms
+                  type: INT
+              - column:
+                  name: bathrooms
+                  type: INT
+              - column:
+                  name: balconies
+                  type: INT
+              - column:
+                  name: description
+                  type: varchar(4096)
+        - createTable:
+            tableName: facility
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(512)
+              - column:
+                  name: icon
+                  type: varchar(512)
+              - column:
+                  name: description
+                  type: varchar(512)
+              - column:
+                  name: estate_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_facility_estate
+                    references: estate(id)
+
+        - createTable:
+            tableName: estate_image
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: filename
+                  type: varchar(1024)
+              - column:
+                  name: key
+                  type: INT
+              - column:
+                  name: path
+                  type: varchar(1024)
+              - column:
+                  name: estate_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_facility_estate
+                    references: estate(id)
+
+  - changeSet:
+      id: 2
+      author: admin
+      changes:
+        - dropColumn:
+            tableName: location
+            columnName: title_id
+        - addColumn:
+            tableName: location_title
+            columns:
+              - column:
+                  name: location_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_title_location
+                    references: location(id)
+
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: image
+                  type: varchar(1024)
+
+  - changeSet:
+      id: 4
+      author: admin
+      changes:
+        - dropColumn:
+            tableName: facility
+            columnName: estate_id
+
+        - createTable:
+            tableName: estate_facility
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: estate_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_facility_estate
+                    references: estate(id)
+              - column:
+                  name: facility_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_estate_facility
+                    references: facility(id)
+  - changeSet:
+      id: 5
+      author: admin
+      changes:
+        - addColumn:
+            tableName: estate
+            columns:
+              - column:
+                  name: title
+                  type: varchar(512)
+              - column:
+                  name: street
+                  type: varchar(512)
+              - column:
+                  name: map_url
+                  type: varchar(2048)
+  - changeSet:
+      id: 6
+      author: admin
+      changes:
+        - addColumn:
+            tableName: estate
+            columns:
+              - column:
+                  name: created_at
+                  type: timestamp
+

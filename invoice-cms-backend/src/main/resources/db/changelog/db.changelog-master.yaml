@@ -1,0 +1,660 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: company
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+              - column:
+                  name: created_at
+                  type: date
+              - column:
+                  name: updated_at
+                  type: date
+        - createTable:
+            tableName: country
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+        - createTable:
+            tableName: city
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+              - column:
+                  name: country_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_city_country
+                    references: country(id)
+        - createTable:
+            tableName: customer
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(256)
+              - column:
+                  name: last_name
+                  type: varchar(256)
+              - column:
+                  name: email
+                  type: varchar(1000)
+              - column:
+                  name: image
+                  type: varchar(1000)
+              - column:
+                  name: company_name
+                  type: varchar(256)
+              - column:
+                  name: country_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_customer_country
+                    references: country(id)
+              - column:
+                  name: city_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_customer_city
+                    references: city(id)
+              - column:
+                  name: street
+                  type: varchar(512)
+              - column:
+                  name: state
+                  type: varchar(256)
+              - column:
+                  name: zip_code
+                  type: varchar(50)
+              - column:
+                  name: created_at
+                  type: date
+              - column:
+                  name: updated_at
+                  type: date
+        - createTable:
+            tableName: invoice
+            column:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ordinal_number
+                  type: BIGINT
+              - column:
+                  name: customer
+                  type: text
+              - column:
+                  name: company
+                  type: text
+              - column:
+                  name: status
+                  type: varchar(50)
+              - column:
+                  name: notes
+                  type: varchar(1024)
+              - column:
+                  name: invoice_at
+                  type: date
+              - column:
+                  name: due_at
+                  type: date
+              - column:
+                  name: created_at
+                  type: date
+              - column:
+                  name: updated_at
+                  type: date
+        - createTable:
+            tableName: offering
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(256)
+              - column:
+                  name: description
+                  type: varchar(1024)
+              - column:
+                  name: price
+                  type: double
+              - column:
+                  name: type
+                  type: varchar(20)
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(256)
+              - column:
+                  name: last_name
+                  type: varchar(256)
+              - column:
+                  name: email
+                  type: varchar(1000)
+              - column:
+                  name: image
+                  type: varchar(1000)
+              - column:
+                  name: role
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(1000)
+              - column:
+                  name: created_at
+                  type: date
+              - column:
+                  name: updated_at
+                  type: date
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - modifyDataType:
+            tableName: invoice
+            columnName: status
+            newDataType: INT
+        - modifyDataType:
+            tableName: offering
+            columnName: type
+            newDataType: INT
+  - changeSet:
+      id: 4
+      author: admin
+      changes:
+        - modifyDataType:
+            tableName: users
+            columnName: role
+            newDataType: INT
+  - changeSet:
+      id: 5
+      author: admin
+      changes:
+        - addColumn:
+            tableName: company
+            columns:
+              name: created_by
+              type: BIGINT
+              constraints:
+                foreignKeyName: fk_company_user
+                references: users(id)
+  - changeSet:
+      id: 6
+      author: admin
+      changes:
+        renameColumn:
+          tableName: company
+          columnDataType: BIGINT
+          oldColumnName: created_by
+          newColumnName: created_by_id
+
+  - changeSet:
+      id: 7
+      author: admin
+      changes:
+        - addColumn:
+            tableName: customer
+            columns:
+              name: created_by_id
+              type: BIGINT
+              constraints:
+                foreignKeyName: fk_customer_user
+                references: users(id)
+        - addColumn:
+            tableName: invoice
+            columns:
+              name: created_by_id
+              type: BIGINT
+              constraints:
+                foreignKeyName: fk_invoice_user
+                references: users(id)
+        - addColumn:
+            tableName: offering
+            columns:
+              name: created_by_id
+              type: BIGINT
+              constraints:
+                foreignKeyName: fk_offering_user
+                references: users(id)
+
+  - changeSet:
+      id: 8
+      author: admin
+      changes:
+        - createTable:
+            tableName: invoice_offering
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: price
+                  type: double
+              - column:
+                  name: quantity
+                  type: INT
+              - column:
+                  name: description
+                  type: varchar(1000)
+              - column:
+                  name: invoice_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_offering_invoice
+                    references: invoice(id)
+              - column:
+                  name: offering_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_invoice_offering
+                    references: offering(id)
+
+  - changeSet:
+      id: 10
+      author: admin
+      changes:
+        - addColumn:
+            tableName: invoice
+            columns:
+              name: total
+              type: double
+        - modifyDataType:
+            tableName: company
+            columnName: created_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: company
+            columnName: updated_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: customer
+            columnName: created_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: customer
+            columnName: updated_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: invoice
+            columnName: created_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: invoice
+            columnName: updated_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: users
+            columnName: created_at
+            newDataType: timestamp
+        - modifyDataType:
+            tableName: users
+            columnName: updated_at
+            newDataType: timestamp
+
+  - changeSet:
+      id: 11
+      author: admin
+      changes:
+        - createTable:
+            tableName: setting
+            columns:
+                - column:
+                    name: id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: key
+                    type: varchar(256)
+                - column:
+                    name: is_public
+                    type: boolean
+                - column:
+                    name: created_at
+                    type: timestamp
+                - column:
+                    name: updated_at
+                    type: timestamp
+        - createTable:
+            tableName: setting_value
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: en
+                  type: text
+              - column:
+                  name: ro
+                  type: text
+              - column:
+                  name: ru
+                  type: text
+              - column:
+                  name: de
+                  type: text
+              - column:
+                  name: es
+                  type: text
+              - column:
+                  name: setting_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_value_setting
+                    references: setting(id)
+
+  - changeSet:
+      id: 12
+      author: admin
+      changes:
+        - createTable:
+            tableName: bank_account
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: iban
+                  type: varchar(256)
+              - column:
+                  name: swift_bic
+                  type: varchar(256)
+              - column:
+                  name: street
+                  type: varchar(256)
+              - column:
+                  name: country_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_account_country
+                    references: country(id)
+              - column:
+                  name: city_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_account_city
+                    references: city(id)
+              - column:
+                  name: postcode
+                  type: varchar(256)
+              - column:
+                  name: company_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_account_company
+                    references: company(id)
+              - column:
+                  name: created_by_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_account_user
+                    references: users(id)
+  - changeSet:
+      id: 13
+      author: admin
+      changes:
+        - addColumn:
+            tableName: invoice
+            columns:
+              name: bank_account
+              type: text
+
+  - changeSet:
+      id: 14
+      author: admin
+      changes:
+        - createTable:
+            tableName: article
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(512)
+              - column:
+                  name: body
+                  type: text
+              - column:
+                  name: image
+                  type: varchar(1024)
+              - column:
+                  name: keywords
+                  type: varchar(2048)
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: updated_at
+                  type: timestamp
+
+  - changeSet:
+      id: 15
+      author: admin
+      changes:
+        - addColumn:
+            tableName: invoice
+            columns:
+              name: last_sent_at
+              type: timestamp
+
+  - changeSet:
+      id: 16
+      author: admin
+      changes:
+        - addColumn:
+            tableName: invoice
+            columns:
+              name: currency
+              type: INT
+
+  - changeSet:
+      id: 17
+      author: admin
+      changes:
+        - createTable:
+            tableName: registration_confirm
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(512)
+              - column:
+                  name: code
+                  type: varchar(10)
+              - column:
+                  name: deadline
+                  type: timestamp
+
+  - changeSet:
+      id: 18
+      author: admin
+      changes:
+        - addColumn:
+            tableName: bank_account
+            columns:
+              name: name
+              type: varchar(256)
+
+  - changeSet:
+      id: 19
+      author: admin
+      changes:
+        - addColumn:
+            tableName: article
+            columns:
+              name: description
+              type: varchar(1024)
+
+  - changeSet:
+      id: 20
+      author: admin
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              name: provider
+              type: int
+
+  - changeSet:
+      id: 21
+      author: admin
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              name: type
+              type: int
+
+  - changeSet:
+      id: 22
+      author: admin
+      changes:
+        - addColumn:
+            tableName: company
+            columns:
+              - column:
+                  name: country_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_company_country
+                    references: country(id)
+              - column:
+                  name: city_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_company_city
+                    references: city(id)
+              - column:
+                  name: state
+                  type: varchar(256)
+              - column:
+                  name: street
+                  type: varchar(256)
+              - column:
+                  name: image
+                  type: varchar(1000)
+
+  - changeSet:
+      id: 23
+      author: admin
+      changes:
+        - addColumn:
+            tableName: company
+            columns:
+              name: zip_code
+              type: varchar(256)
+
+  - changeSet:
+      id: 28
+      author: admin
+      changes:
+        - addColumn:
+            tableName: article
+            columns:
+              name: youtube_link
+              type: varchar(1000)
+
+  - changeSet:
+      id: 33
+      author: admin
+      changes:
+        - addColumn:
+            tableName: invoice
+            columns:
+              name: owner
+              type: text
+
+  - changeSet:
+      id: 34
+      author: admin
+      changes:
+        - addColumn:
+            tableName: article
+            columns:
+              name: alias
+              type: varchar(1000)
+
+
+
+
+
+
